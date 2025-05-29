@@ -1,0 +1,2 @@
+kubectl apply -f https://raw.githubusercontent.com/microservices-demo/microservices-demo/master/deploy/kubernetes/complete-demo.yaml
+kubectl get pods -n sock-shop
