@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - name: payment-service
+        image: yourregistry/payment-service:latest
+        ports:
+        - containerPort: 5000
+        env:
+        # Required OpenTelemetry variables
+        - name: OTEL_SERVICE_NAME
+          value: "payment-service"
+        - name: OTEL_EXPORTER_JAEGER_AGENT_HOST
+          value: "simplest-jaeger-agent.observability.svc.cluster.local"
+        - name: OTEL_EXPORTER_JAEGER_AGENT_PORT
+          value: "6831"
+        - name: OTEL_TRACES_SAMPLER
+          value: "parentbased_always_on"
+        # Optional debug variables
+        - name: OTEL_PYTHON_LOG_LEVEL
+          value: "DEBUG"
+        - name: OTEL_LOG_LEVEL
+          value: "DEBUG"

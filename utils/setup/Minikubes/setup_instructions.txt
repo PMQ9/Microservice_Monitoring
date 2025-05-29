@@ -33,3 +33,27 @@ Step 5: install Loki and Promtail
     helm install promtail grafana/promtail --set "loki.serviceName=loki"
 
 Step 6: Configure Grafana to query Loki
+
+Step 7: Setup Jaeger
+    kubectl create namespace observability
+    kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/download/v1.42.0/jaeger-operator.yaml -n observability
+    kubectl get pods -n observability
+
+        @"
+    apiVersion: jaegertracing.io/v1
+    kind: Jaeger
+    metadata:
+    name: simplest
+    namespace: observability
+    spec:
+    strategy: allInOne
+    storage:
+        type: memory
+        options:
+        memory:
+            max-traces: 100000
+    "@ | kubectl apply -f -
+
+Step 8: Instrument Python Microservices
+    pip install opentelemetry-api opentelemetry-sdk opentelemetry-instrumentation-flask opentelemetry-exporter-jaeger
+    
