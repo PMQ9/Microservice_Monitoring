@@ -121,6 +121,7 @@ Grafana will visualize metrics, logs, and traces. We’ll use the Grafana Helm c
 **Step 6: Instrument Microservice with OpenTelemetry (OTel)**
 
 To collect metrics and traces, we’ll instrument your frontend and backend services with OpenTelemetry
+    - `mkdir -p ~/Microservice_Monitoring/observability/opentelemetry`
 - Rebuild and Redeploy:
     - `eval $(minikube docker-env)`
     - `docker build -t backend-service:latest app/backend/`
@@ -188,6 +189,23 @@ We’ll create ArgoCD Application resources to sync microservices and monitoring
     - In Windows browser: `microservice` and `monitoring` should be `Healthy` and `Synced`
     - Or `kubectl get pods -n default` and `kubectl get pods -n monitoring`
     - Manual sync: `argocd app sync microservices` and `argocd app sync monitoring`
+
+## Demo and Testing
+
+**Demo**
+
+- `chmod +x utils/demo.sh`
+
+**Cleanup script**
+
+Script to tear down the cluster for testing iterations.
+- `chmod +x utils/cleanup.sh`
+
+**Auto test script**
+
+- `chmod +x utils/test.sh`
+- `sudo apt install -y nodejs`
+- `node utils/load-test.js $(minikube service frontend-service --url -n default)`
 
 
 ## Key Features
