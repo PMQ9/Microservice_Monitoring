@@ -151,6 +151,44 @@ Add a ServiceMonitor to scrape OTel metrics from your services.
     - This will generate some traffic, refresh the frontend URL, check Grafana for metrics/logs and Jaeger for traces
     - If UIs don’t load, ensure Docker Desktop is running and try `kubectl port-forward svc/grafana 3000:80 -n monitoring` and `http://localhost:3000`.
 
+## Setup GitOps
+
+Use ArgoCD to automatically deploy and manage your microservices (frontend, backend) and monitoring stack (Prometheus, Jaeger, Loki, Grafana) by syncing Kubernetes manifests from GitHub repo
+Why ArgoCD? It’s a popular GitOps tool that automates Kubernetes deployments, tracks changes in Git, and provides a web UI for visualization. 
+
+**Step 1: Install ArgoCD**
+
+1. Create ArgoCD namespace:
+    - `kubectl create namespace argocd`
+2. Apply ArgoCD Manifest
+    - `curl -sSL -o ~/Microservice_Monitoring/gitops/argocd-install/argocd-install.yaml https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml`
+3. Apply ArgoCD
+    - `kubectl apply -f gitops/argocd-install/argocd-install.yaml`
+4. Verfiy ArgoCD is running
+    - `kubectl get pods -n argocd`
+
+**Step 2: Access ArgoCD UI**
+
+ArgoCD provides a web UI, which we’ll expose to your Windows browser.
+1. Get ArgoCD URL
+    - `minikube service argocd-server -n argocd --url`
+2. Get ArgoCD password
+    - `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
+3. Access via Windows browser
+    - `http://192.168.49.2:xxxxx`
+    - `admin/password`
+
+**Step 3: Configure ArgoCD Application**
+
+We’ll create ArgoCD Application resources to sync microservices and monitoring stack from GitHub repo
+1.  Apply Application Manifests:
+    - `kubectl apply -f gitops/applications/app.yaml`
+    - `kubectl apply -f gitops/applications/monitoring.yaml`
+2. Verify ArgoCD UI is synced
+    - In Windows browser: `microservice` and `monitoring` should be `Healthy` and `Synced`
+    - Or `kubectl get pods -n default` and `kubectl get pods -n monitoring`
+    - Manual sync: `argocd app sync microservices` and `argocd app sync monitoring`
+
 
 ## Key Features
 
@@ -162,3 +200,24 @@ Add a ServiceMonitor to scrape OTel metrics from your services.
 - Jaeger: Visualizes distributed traces (request flows between frontend and backend).
 - Loki: Aggregates logs from microservices
 - Grafana: Displays dashboards for metrics (Prometheus), traces (Jaeger), and logs (Loki).
+
+## Structure
+Microservice_Monitoring/
+├── .tool-versions
+├── app/
+│   ├── frontend/               # Frontend manifests
+│   ├── backend/                # Backend manifests
+├── observability/
+│   ├── prometheus/             # Prometheus manifests
+│   ├── opentelemetry/          # OTel configs
+│   ├── jaeger/                 # Jaeger manifests
+│   ├── loki/                   # Loki manifests
+│   ├── grafana/                # Grafana manifests
+├── gitops/
+│   ├── argocd-install/         # ArgoCD installation manifests
+│   ├── applications/           # ArgoCD Application manifests
+├── utils/
+│   ├── setup/
+│   │   ├── setup-tools-asdf.sh
+│   │   ├── setup-tools-bash.sh
+├── README.md
