@@ -1,11 +1,10 @@
 # Microservice_Monitoring
 
-Full-stack monitoring platform to surveil microservices, alerts and debug issues, auto-scales and deploy via GitOps/ArgoCD
+Full-stack monitoring platform to surveil microservices, alerts and debug issues, auto-scales and deploy
 
 ## What this does
 
-Deploy a sample microservices application on Minikube
-Tracks, visualizes, and alerts on the health of the microservices using Prometheus, OTel, Jaeger, Loki, Grafana
+Deploy a sample microservices application on Minikube, tracks, visualizes, and alerts on the health of the microservices using Prometheus, OTel, Jaeger, Loki, Grafana
 
 ## Environment Setup
 
