@@ -202,22 +202,23 @@ We’ll create ArgoCD Application resources to sync microservices and monitoring
 - Grafana: Displays dashboards for metrics (Prometheus), traces (Jaeger), and logs (Loki).
 
 ## Structure
-Microservice_Monitoring/
-├── .tool-versions
-├── app/
-│   ├── frontend/               # Frontend manifests
-│   ├── backend/                # Backend manifests
-├── observability/
-│   ├── prometheus/             # Prometheus manifests
-│   ├── opentelemetry/          # OTel configs
-│   ├── jaeger/                 # Jaeger manifests
-│   ├── loki/                   # Loki manifests
-│   ├── grafana/                # Grafana manifests
-├── gitops/
-│   ├── argocd-install/         # ArgoCD installation manifests
-│   ├── applications/           # ArgoCD Application manifests
-├── utils/
-│   ├── setup/
-│   │   ├── setup-tools-asdf.sh
-│   │   ├── setup-tools-bash.sh
-├── README.md
+    Microservice_Monitoring/
+    │
+    ├── .tool-versions
+    ├── app/
+    │   ├── frontend/               # Frontend manifests
+    │   └── backend/                # Backend manifests
+    ├── observability/
+    │   ├── prometheus/             # Prometheus manifests
+    │   ├── opentelemetry/          # OTel configs
+    │   ├── jaeger/                 # Jaeger manifests
+    │   ├── loki/                   # Loki manifests
+    │   └── grafana/                # Grafana manifests
+    ├── gitops/
+    │   ├── argocd-install/         # ArgoCD installation manifests
+    │   └── applications/           # ArgoCD Application manifests
+    ├── utils/
+    │   └── setup/
+    │       ├── setup-tools-asdf.sh
+    │       └── setup-tools-bash.sh
+    └── README.md
