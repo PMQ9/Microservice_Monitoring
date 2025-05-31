@@ -1,3 +1,52 @@
+# Use single-binary mode
 loki:
+  # Configure single-binary deployment
+  singleBinary:
+    replicas: 1
+    persistence:
+      enabled: true
+      size: 1Gi
+      storageClassName: standard
+  # Disable scalable components
+  backend:
+    enabled: false
+    replicas: 0
+  read:
+    enabled: false
+    replicas: 0
+  write:
+    enabled: false
+    replicas: 0
+  # Disable distributed components
+  ingester:
+    enabled: false
+  querier:
+    enabled: false
+  queryFrontend:
+    enabled: false
+  distributor:
+    enabled: false
+  compactor:
+    enabled: false
+  indexGateway:
+    enabled: false
+  # Use filesystem storage
   storage:
-    type: filesystem  # Simple storage for Minikube
+    type: filesystem
+    filesystem:
+      dir: /data/loki
+# Disable additional features
+gateway:
+  enabled: false
+minio:
+  enabled: false
+# Disable monitoring integrations for simplicity
+monitoring:
+  dashboards:
+    enabled: false
+  rules:
+    enabled: false
+  serviceMonitor:
+    enabled: false
+test:
+  enabled: false
