@@ -12,6 +12,7 @@ from opentelemetry.instrumentation.requests import RequestsInstrumentor
 app = Flask(__name__)
 
 # Initialize OpenTelemetry
+metrics.set_meter_provider(MeterProvider())
 metrics.get_meter_provider().shutdown()
 meter = metrics.get_meter("frontend-service")
 counter = meter.create_counter("http.requests", description="Total HTTP requests")

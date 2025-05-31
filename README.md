@@ -60,8 +60,8 @@ This project runs in WSL2 on Windows, with Minikube for Kubernetes and Docker De
         - `kubectl apply -f app/backend/backend-deployment.yaml`
         - `kubectl apply -f app/backend/backend-service.yaml`
     - Deploy Frontend:
-        - `kubectl apply -f app/backend/frontend-deployment.yaml`
-        - `kubectl apply -f app/backend/frontend-service.yaml`
+        - `kubectl apply -f app/frontend/frontend-deployment.yaml`
+        - `kubectl apply -f app/frontend/frontend-service.yaml`
 6. Verify Deployment:
     - `kubectl get pods -n default`
 7. Access Frontend from Windows:
