@@ -64,13 +64,17 @@ This project runs in WSL2 on Windows, with Minikube for Kubernetes and Docker De
         - `kubectl apply -f app/frontend/frontend-service.yaml`
 6. Verify Deployment:
     - `kubectl get pods -n default`
+    ![alt text](doc/verify-kubernetes-deployment.png)
 7. Access Frontend from Windows:
     - Get Frontend URL: `minikube service frontend-service --url -n default`
         - It should say: `http://192.168.49.2:30001`, access from Windows browser
     *Explanation: This is a simple microservices app with a frontend calling a backend API, running in Kubernetes*
+    ![alt text](doc/access-frontend-from-windows.png)
 8. To view Kubernetes clusters:
     - `kubectl get pods` `kubectl get svc`
+    ![alt text](doc/view-kubernetes-cluster.png)
     - `minikube dashboard`
+    ![alt text](doc/view-minikube-dashboard.png)
 
 ## Monitoring Stack
 
@@ -81,13 +85,14 @@ This project runs in WSL2 on Windows, with Minikube for Kubernetes and Docker De
 
 Prometheus will scrape metrics from microservices. We’ll use the Prometheus Helm chart for easy deployment and configure it to monitor frontend and backend services.
 1. Add Helm repository:
-    - `helm repo add prometheus -community https://prometheus-community.github.io/helm-charts`
+    - `helm repo add prometheus-community https://prometheus-community.github.io/helm-charts`
     - `helm repo update`
 2. Install Prometheus
     - `mkdir -p ~/Microservice_Monitoring/observability/prometheus`
     - `helm install prometheus prometheus-community/prometheus -n monitoring -f observability/prometheus/values.yaml`
 3. Verify Prometheus
-    - `kubectl get pods -n monitoring -l app=prometheus`
+    - `kubectl get pods -n monitoring -l "app.kubernetes.io/name=prometheus"`
+    ![alt text](doc/verify-prometheus.png)
 
 **Step 3: Deploy Jaeger**
 
@@ -96,6 +101,7 @@ Jaeger will handle distributed tracing. We’ll use the Jaeger all-in-one deploy
     - `kubectl apply -f observability/jaeger/jaeger-deployment.yaml`
 2. Verify Jaeger is running
     - `kubectl get pods -n monitoring -l app=jaeger`
+    ![alt text](doc/verify-jaeger.png)
 
 **Step 4: Deploy Loki**
 
