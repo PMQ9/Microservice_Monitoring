@@ -67,14 +67,98 @@ This project runs in WSL2 on Windows, with Minikube for Kubernetes and Docker De
 7. Access Frontend from Windows:
     - Get Frontend URL: `minikube service frontend-service --url -n default`
         - It should say: `http://192.168.49.2:30001`, access from Windows browser
-*Explanation: This is a simple microservices app with a frontend calling a backend API, running in Kubernetes*
+    *Explanation: This is a simple microservices app with a frontend calling a backend API, running in Kubernetes*
 8. To view Kubernetes clusters:
     - `kubectl get pods` `kubectl get svc`
     - `minikube dashboard`
-    
+
+## Monitoring Stack
+
+**Step 1: Create Monitoring Namespace**
+    - Deploy all monitoring tools in `monitoring` namespace: `kubectl create namespace monitoring`
+
+**Step 2: Deploy Prometheus**
+
+Prometheus will scrape metrics from microservices. We’ll use the Prometheus Helm chart for easy deployment and configure it to monitor frontend and backend services.
+1. Add Helm repository:
+    - `helm repo add prometheus -community https://prometheus-community.github.io/helm-charts`
+    - `helm repo update`
+2. Install Prometheus
+    - `mkdir -p ~/Microservice_Monitoring/observability/prometheus`
+    - `helm install prometheus prometheus-community/prometheus -n monitoring -f observability/prometheus/values.yaml`
+3. Verify Prometheus
+    - `kubectl get pods -n monitoring -l app=prometheus`
+
+**Step 3: Deploy Jaeger**
+
+Jaeger will handle distributed tracing. We’ll use the Jaeger all-in-one deployment for simplicity
+1. Apply Jaeger
+    - `kubectl apply -f observability/jaeger/jaeger-deployment.yaml`
+2. Verify Jaeger is running
+    - `kubectl get pods -n monitoring -l app=jaeger`
+
+**Step 4: Deploy Loki**
+
+Loki will aggregate logs. We’ll use the Grafana Loki Helm chart with a simple configuration (no persistent storage for Minikube).
+1. Add Helm Repository
+    - `helm repo add grafana https://grafana.github.io/helm-charts`
+    - `helm repo update`
+2. Install Loki
+    - `mkdir -p ~/Microservice_Monitoring/observability/loki`
+    - `helm install loki grafana/loki -n monitoring -f observability/loki/values.yaml`
+3. Verify Loki is running
+    - `kubectl get pods -n monitoring -l app.kubernetes.io/name=loki`
+
+**Step 5: Deploy Grafana**
+
+Grafana will visualize metrics, logs, and traces. We’ll use the Grafana Helm chart.
+1. Install Grafana
+    - `mkdir -p ~/Microservice_Monitoring/observability/grafana`
+    - `helm install grafana grafana/grafana -n monitoring -f observability/grafana/values.yaml`
+2. Verify Grafana is running
+    - `kubectl get pods -n monitoring -l app.kubernetes.io/name=grafana`
+
+**Step 6: Instrument Microservice with OpenTelemetry (OTel)**
+
+To collect metrics and traces, we’ll instrument your frontend and backend services with OpenTelemetry
+- Rebuild and Redeploy:
+    - `eval $(minikube docker-env)`
+    - `docker build -t backend-service:latest app/backend/`
+    - `docker build -t frontend-service:latest app/frontend/`
+    - `kubectl apply -f app/backend/backend-deployment.yaml`
+    - `kubectl apply -f app/backend/backend-service.yaml`
+    - `kubectl apply -f app/frontend/frontend-deployment.yaml`
+    - `kubectl apply -f app/frontend/frontend-service.yaml`
+
+**Step 7: Configure Prometheus**
+
+Add a ServiceMonitor to scrape OTel metrics from your services.
+- `kubectl apply -f observability/prometheus/service-monitor.yaml`
+
+**Step 8: Access Monitoring UIs in Windows**
+
+1. Grafana:
+    - `minikube service grafana -n monitoring --url`
+    - Windows browser `http://192.168.49.2:30000` 
+    - Login: `admin/admin`
+    - Add dashboard: Prometheus ID 6417, Loki ID 12006
+2. Jaeger:
+    - `minikube service jaeger -n monitoring --url`
+    - Windows browser `http://192.168.49.2:16686`
+    - Verify if `frontend-service` and `backend-service` is running
+3. Test the application
+    - `minikube service frontend-service --url -n default`
+    - This will generate some traffic, refresh the frontend URL, check Grafana for metrics/logs and Jaeger for traces
+    - If UIs don’t load, ensure Docker Desktop is running and try `kubectl port-forward svc/grafana 3000:80 -n monitoring` and `http://localhost:3000`.
+
 
 ## Key Features
 
-- Metric Collection (Prometheus) 
-- Distributed Tracing (Jaeger)
-- Log Aggregation (Loki + Grafana)
+- Kubernetes: deploy a microservice cluster
+- Minikube: deploy Kubernetes on local server
+- Windows Subsystem Linux 2 (WSL2): run Linux machine in Windows environment
+- Prometheus: Collect metrics
+- OpenTelemetry (OTel): Instruments the app for metrics and traces, sending data to Prometheus and Jaeger
+- Jaeger: Visualizes distributed traces (request flows between frontend and backend).
+- Loki: Aggregates logs from microservices
+- Grafana: Displays dashboards for metrics (Prometheus), traces (Jaeger), and logs (Loki).

@@ -1,0 +1,3 @@
+loki:
+  storage:
+    type: filesystem  # Simple storage for Minikube

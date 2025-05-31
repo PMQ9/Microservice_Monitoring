@@ -1,0 +1,13 @@
+server:
+  service:
+    type: ClusterIP
+  persistentVolume:
+    enabled: false  # Disable for Minikube simplicity
+alertmanager:
+  enabled: false
+kubeStateMetrics:
+  enabled: true
+nodeExporter:
+  enabled: true
+pushgateway:
+  enabled: false

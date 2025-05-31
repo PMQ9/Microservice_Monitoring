@@ -1,0 +1,31 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: microservices-monitor
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  endpoints:
+  - port: web
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - default
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend-monitor
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  endpoints:
+  - port: web
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - default
