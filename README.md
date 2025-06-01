@@ -36,7 +36,6 @@ This project runs in WSL2 on Windows, with Minikube for Kubernetes and Docker De
         - `kubectl version --client`
         - `helm version`
         - `minikube version`
-        - `docker --version`
         - `git --version`.
 
 4. Start MiniKube in WSL2
