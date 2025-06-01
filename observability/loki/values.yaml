@@ -1,3 +1,8 @@
+deploymentMode: SingleBinary
 loki:
   storage:
-    type: filesystem  # Simple storage for Minikube
+    type: filesystem
+persistence:
+  enabled: true
+  storageClass: standard
+  size: 10Gi
