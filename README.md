@@ -1,16 +1,38 @@
 # Microservice_Monitoring
 
-Full-stack monitoring platform to surveil microservices, alerts and debug issues, auto-scales and deploy
+A comprehensive full-stack monitoring solution for microservices architectures, featuring automated deployment, health tracking, visualization, and alerting capabilities.
 
-## What this does
+![alt text](doc/live-metric-grafana-dashboard-prometheus.png)
 
-Deploy a sample microservices application on Minikube, tracks, visualizes, and alerts on the health of the microservices using Prometheus, OTel, Jaeger, Loki, Grafana
+## Overview
+
+This project demonstrates a complete monitoring stack for microservices deployed on Kubernetes (Minikube), including:
+
+- **Application Layer**: Sample frontend and backend microservices  
+- **Monitoring Stack**: Prometheus, OpenTelemetry, Jaeger, Loki, and Grafana  
+- **GitOps Integration**: ArgoCD for continuous deployment  
+- **Local Development**: WSL2 and Docker Desktop integration  
 
 ## Environment Setup
 
-This project runs in WSL2 on Windows, with Minikube for Kubernetes and Docker Desktop for containerization.
+| Component          | Purpose                                                                 |
+|--------------------|-------------------------------------------------------------------------|
+| Kubernetes         | Orchestration platform for microservices deployment                     |
+| Prometheus         | Metrics collection and time-series database                             |
+| OpenTelemetry      | Standardized instrumentation for metrics and traces                     |
+| Jaeger             | Distributed tracing system for request flow visualization               |
+| Loki               | Log aggregation system                                                  |
+| Grafana            | Unified dashboard for metrics, logs, and traces visualization           |
+| ArgoCD             | GitOps tool for declarative continuous deployment                       |
 
-**Step 1: Step up WSL2**
+## Prerequisites
+
+- Windows 10/11 with WSL2 enabled  
+- Docker Desktop with WSL2 integration  
+- Minikube for local Kubernetes cluster  
+- 8GB+ RAM recommended (Tested on a 4C8T 8GB SATA SSD Win11 machine, it can work but will be a bit slow) 
+
+**Step 1: Environment Setup**
 
 1. Setup WSL2:
     - Install WSL2: `wsl --install -d Ubuntu`
@@ -40,10 +62,7 @@ This project runs in WSL2 on Windows, with Minikube for Kubernetes and Docker De
         - `kubectl version --client`
         - `helm version`
         - `minikube version`
-        - `git --version`.
-
-4. Start MiniKube in WSL2
-    - `minikube start --driver=docker`
+        - `git --version`
 
 **Step 2: Deploy Microservice Apps**
 
@@ -67,16 +86,19 @@ This project runs in WSL2 on Windows, with Minikube for Kubernetes and Docker De
         - `kubectl apply -f app/frontend/frontend-service.yaml`
 6. Verify Deployment:
     - `kubectl get pods -n default`
+
     ![alt text](doc/verify-kubernetes-deployment.png)
 7. Access Frontend from Windows:
     - Get Frontend URL: `minikube service frontend-service --url -n default`
-        - It should say: `http://192.168.49.2:30001`, access from Windows browser
-    *Explanation: This is a simple microservices app with a frontend calling a backend API, running in Kubernetes*
+
     ![alt text](doc/access-frontend-from-windows.png)
 8. To view Kubernetes clusters:
-    - `kubectl get pods` `kubectl get svc`
+    - `kubectl get svc`
+
     ![alt text](doc/view-kubernetes-cluster.png)
+
     - `minikube dashboard`
+
     ![alt text](doc/view-minikube-dashboard.png)
 
 ## Monitoring Stack
@@ -156,12 +178,10 @@ Add a ServiceMonitor to scrape OTel metrics from your services.
 
 1. Grafana:
     - `minikube service grafana -n monitoring --url`
-    - Windows browser `http://192.168.49.2:30000` 
     - Login: `admin/admin`
     - Add dashboard: Prometheus ID 6417, Loki ID 12006
 2. Jaeger:
     - `minikube service jaeger -n monitoring --url`
-    - Windows browser `http://192.168.49.2:16686`
     - Verify if `frontend-service` and `backend-service` is running
 3. Test the application
     - `minikube service frontend-service --url -n default`
