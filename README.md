@@ -164,6 +164,12 @@ Add a ServiceMonitor to scrape OTel metrics from your services.
     - This will generate some traffic, refresh the frontend URL, check Grafana for metrics/logs and Jaeger for traces
     - If UIs don’t load, ensure Docker Desktop is running and try `kubectl port-forward svc/grafana 3000:80 -n monitoring` and `http://localhost:3000`.
 
+    - Loki logs sampled traffics
+    ![alt text](doc/view-grafana-dashboard-loki.png)
+
+    - Prometheus showing health metrics, infrastructure and services:
+    ![alt text](doc/view-grafana-dashboard-prometheus.png)
+
 ## Setup GitOps
 
 Use ArgoCD to automatically deploy and manage your microservices (frontend, backend) and monitoring stack (Prometheus, Jaeger, Loki, Grafana) by syncing Kubernetes manifests from GitHub repo
