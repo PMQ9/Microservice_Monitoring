@@ -36,7 +36,6 @@ This project runs in WSL2 on Windows, with Minikube for Kubernetes and Docker De
         - `kubectl version --client`
         - `helm version`
         - `minikube version`
-        - `docker --version`
         - `git --version`.
 
 4. Start MiniKube in WSL2
@@ -92,6 +91,7 @@ Prometheus will scrape metrics from microservices. We’ll use the Prometheus He
     - `helm install prometheus prometheus-community/prometheus -n monitoring -f observability/prometheus/values.yaml`
 3. Verify Prometheus
     - `kubectl get pods -n monitoring -l "app.kubernetes.io/name=prometheus"`
+
     ![alt text](doc/verify-prometheus.png)
 
 **Step 3: Deploy Jaeger**
@@ -101,6 +101,7 @@ Jaeger will handle distributed tracing. We’ll use the Jaeger all-in-one deploy
     - `kubectl apply -f observability/jaeger/jaeger-deployment.yaml`
 2. Verify Jaeger is running
     - `kubectl get pods -n monitoring -l app=jaeger`
+
     ![alt text](doc/verify-jaeger.png)
 
 **Step 4: Deploy Loki**
@@ -115,6 +116,8 @@ Loki will aggregate logs. We’ll use the Grafana Loki Helm chart with a simple 
 3. Verify Loki is running
     - `kubectl get pods -n monitoring -l app.kubernetes.io/name=loki`
 
+    ![alt text](doc/verify-loki.png)
+
 **Step 5: Deploy Grafana**
 
 Grafana will visualize metrics, logs, and traces. We’ll use the Grafana Helm chart.
@@ -123,6 +126,8 @@ Grafana will visualize metrics, logs, and traces. We’ll use the Grafana Helm c
     - `helm install grafana grafana/grafana -n monitoring -f observability/grafana/values.yaml`
 2. Verify Grafana is running
     - `kubectl get pods -n monitoring -l app.kubernetes.io/name=grafana`
+
+    ![alt text](doc/verify-grafana.png)
 
 **Step 6: Instrument Microservice with OpenTelemetry (OTel)**
 
@@ -140,6 +145,7 @@ To collect metrics and traces, we’ll instrument your frontend and backend serv
 **Step 7: Configure Prometheus**
 
 Add a ServiceMonitor to scrape OTel metrics from your services.
+- `helm install prometheus-operator prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace`
 - `kubectl apply -f observability/prometheus/service-monitor.yaml`
 
 **Step 8: Access Monitoring UIs in Windows**
