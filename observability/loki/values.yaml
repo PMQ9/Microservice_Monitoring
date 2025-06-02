@@ -5,7 +5,7 @@ loki:
 #    mode: SingleBinary
   storage:
     type: filesystem
-persistence:
-  enabled: true
-  storageClass: standard
-  size: 10Gi
+  persistence:
+    enabled: true
+    storageClass: standard
+    size: 10Gi
