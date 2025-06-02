@@ -1,5 +1,7 @@
 deploymentMode: SingleBinary
 loki:
+  config:
+    mode: SingleBinary
   storage:
     type: filesystem
 persistence:
