@@ -1,11 +1,31 @@
-#deploymentMode: SingleBinary
 loki:
   deploymentMode: SingleBinary
-#  config:
-#    mode: SingleBinary
   storage:
     type: filesystem
+    filesystem:
+      directory: /data/loki
+  schemaConfig:
+    configs:
+      - from: 2020-10-24
+        store: boltdb-shipper
+        object_store: filesystem
+        schema: v11
+        index:
+          prefix: index_
+          period: 24h
   persistence:
     enabled: true
     storageClass: standard
     size: 10Gi
+
+read:
+  replicas: 0
+
+write:
+  replicas: 0
+
+backend:
+  replicas: 0
+
+singleBinary:
+  replicas: 1
