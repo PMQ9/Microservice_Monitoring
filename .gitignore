@@ -1,1 +1,28 @@
 k8s-security/secrets-management.yaml
+
+# Terraform - State files (contain secrets and local metadata)
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/crash.log
+
+# Terraform - Local provider cache 
+terraform/.terraform/
+.terraform/
+
+# Terraform - Variable files (often contain secrets)
+*.tfvars
+*.tfvars.json
+
+# Local development
+.claude/
+docs/*.md
+DEPLOY_NOW.md
+ENHANCEMENTS_SUMMARY.md
+FINAL_FIX_GUIDE.md
+GITHUB_ACTIONS_RESOLUTION.md
+RESUME_PROJECT_GUIDE.md
+SKILLS_ALIGNMENT.md
+START_HERE.md
+
+# Template files
+k8s-security/secrets-management-TEMPLATE.yaml

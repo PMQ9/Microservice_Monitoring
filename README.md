@@ -34,11 +34,13 @@ Production-ready monitoring solution demonstrating enterprise architecture:
 
 Prerequisites: Kubernetes cluster, Docker, Terraform, kubectl, helm, git
 
-Terraform deployment (recommended):
+Terraform deployment (recommended - WSL2):
 ```bash
+minikube start --driver=docker --force
+eval $(minikube docker-env)
+
 cd terraform
 terraform init
-cp terraform.tfvars.example terraform.tfvars
 terraform apply
 ```
 
@@ -95,19 +97,23 @@ docs/                         Enterprise deployment and operations guides
 
 Local development:
 ```bash
-minikube start --driver=docker
+minikube start --driver=docker --force
 eval $(minikube docker-env)
-docker build -t backend-service:latest app/backend/
-docker build -t frontend-service:latest app/frontend/
-kubectl apply -f app/
-minikube service frontend-service --url -n default
+cd app/backend && docker build -t backend-service:latest . && cd ../..
+cd app/frontend && docker build -t frontend-service:latest . && cd ../..
+kubectl apply -f app/backend/backend-deployment.yaml app/backend/backend-service.yaml
+kubectl apply -f app/frontend/frontend-deployment.yaml app/frontend/frontend-service.yaml
+kubectl get pods -n default
 ```
 
 Monitoring access:
 ```bash
-kubectl port-forward svc/grafana 3000:80 -n monitoring
-kubectl port-forward svc/prometheus 9090:9090 -n monitoring
-kubectl port-forward svc/jaeger 16686:16686 -n monitoring
+kubectl port-forward -n monitoring svc/grafana 3000:80 # http://localhost:3000 (admin/admin)
+kubectl port-forward -n monitoring svc/prometheus-operator-kube-p-prometheus 9090:9090  # http://localhost:9090
+kubectl port-forward -n monitoring svc/jaeger 16686:16686 # http://localhost:16686
+kubectl port-forward -n default svc/frontend-service 5000:5000 # http://localhost:5000
+# Generate load to see observability data
+node utils/load-test.js http://localhost:5000
 ```
 
 Kubernetes operations:
