@@ -1,0 +1,35 @@
+# Example terraform.tfvars file
+# Copy this to terraform.tfvars and modify values as needed
+
+kubeconfig_path     = "~/.kube/config"
+kubeconfig_context  = "minikube"
+monitoring_namespace = "monitoring"
+
+# Service replica counts
+backend_replicas  = 2
+frontend_replicas = 2
+
+# High availability settings
+enable_ha       = false
+prometheus_replica_count = 1
+
+# Resource management
+resource_requests = {
+  cpu    = "100m"
+  memory = "128Mi"
+}
+
+resource_limits = {
+  cpu    = "500m"
+  memory = "512Mi"
+}
+
+# Autoscaling
+enable_autoscaling         = true
+autoscaling_min_replicas   = 1
+autoscaling_max_replicas   = 5
+autoscaling_target_cpu     = 80
+
+# Security
+grafana_admin_password = "change-me-to-secure-password"
+enable_tls            = false
