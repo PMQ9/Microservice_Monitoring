@@ -1,0 +1,152 @@
+# Kubernetes RBAC (Role-Based Access Control) Configuration
+# Demonstrates enterprise security practices with service accounts and role bindings
+
+---
+# Service Account for backend service
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backend-sa
+  namespace: default
+  labels:
+    app: backend
+
+---
+# Service Account for frontend service
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: frontend-sa
+  namespace: default
+  labels:
+    app: frontend
+
+---
+# Service Account for monitoring services
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: monitoring-sa
+  namespace: monitoring
+  labels:
+    app: monitoring
+
+---
+# Role for backend service - read-only pod information
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: backend-role
+  namespace: default
+spec:
+  rules:
+    # Read pods for service discovery
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["get", "list", "watch"]
+    # Read services
+    - apiGroups: [""]
+      resources: ["services"]
+      verbs: ["get", "list"]
+    # Read ConfigMaps for configuration
+    - apiGroups: [""]
+      resources: ["configmaps"]
+      verbs: ["get", "list", "watch"]
+
+---
+# Role for frontend service
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: frontend-role
+  namespace: default
+spec:
+  rules:
+    # Read pods for service discovery
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["get", "list", "watch"]
+    # Read services
+    - apiGroups: [""]
+      resources: ["services"]
+      verbs: ["get", "list"]
+    # Read ConfigMaps
+    - apiGroups: [""]
+      resources: ["configmaps"]
+      verbs: ["get", "list", "watch"]
+
+---
+# Role for monitoring
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: monitoring-role
+spec:
+  rules:
+    # Prometheus metrics endpoints
+    - apiGroups: [""]
+      resources:
+        - nodes
+        - nodes/proxy
+        - nodes/metrics
+        - services
+        - endpoints
+        - pods
+      verbs: ["get", "list", "watch"]
+    # Read pod logs
+    - apiGroups: [""]
+      resources: ["pods/log"]
+      verbs: ["get", "list"]
+    # Service Monitor resources (Prometheus Operator)
+    - apiGroups: ["monitoring.coreos.com"]
+      resources:
+        - servicemonitors
+        - alertrules
+      verbs: ["get", "list", "watch"]
+
+---
+# RoleBinding for backend service
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: backend-rolebinding
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: backend-role
+subjects:
+  - kind: ServiceAccount
+    name: backend-sa
+    namespace: default
+
+---
+# RoleBinding for frontend service
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: frontend-rolebinding
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: frontend-role
+subjects:
+  - kind: ServiceAccount
+    name: frontend-sa
+    namespace: default
+
+---
+# ClusterRoleBinding for monitoring
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: monitoring-clusterrolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: monitoring-role
+subjects:
+  - kind: ServiceAccount
+    name: monitoring-sa
+    namespace: monitoring

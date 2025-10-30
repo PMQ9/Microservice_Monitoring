@@ -1,0 +1,141 @@
+# Kubernetes Resource Quotas and Limits
+# Demonstrates resource management and cost optimization
+
+---
+# Resource Quota for default namespace
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: default-quota
+  namespace: default
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: "20Gi"
+    limits.cpu: "20"
+    limits.memory: "40Gi"
+    pods: "100"
+    persistentvolumeclaims: "10"
+    services: "20"
+    services.loadbalancers: "5"
+    services.nodeports: "10"
+  scopeSelector:
+    matchExpressions:
+      - operator: In
+        scopeName: PriorityClass
+        values: ["default", "high"]
+
+---
+# Resource Quota for monitoring namespace
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: monitoring-quota
+  namespace: monitoring
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: "20Gi"
+    limits.cpu: "20"
+    limits.memory: "40Gi"
+    pods: "50"
+    persistentvolumeclaims: "5"
+    services: "10"
+
+---
+# LimitRange for default namespace - sets default and max resource limits per pod
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: default-limitrange
+  namespace: default
+spec:
+  limits:
+    # Per pod limits
+    - type: Pod
+      max:
+        cpu: "2"
+        memory: "2Gi"
+      min:
+        cpu: "50m"
+        memory: "64Mi"
+      default:
+        cpu: "500m"
+        memory: "512Mi"
+    # Per container limits
+    - type: Container
+      max:
+        cpu: "2"
+        memory: "2Gi"
+      min:
+        cpu: "50m"
+        memory: "64Mi"
+      default:
+        cpu: "500m"
+        memory: "512Mi"
+      defaultRequest:
+        cpu: "100m"
+        memory: "128Mi"
+
+---
+# LimitRange for monitoring namespace
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: monitoring-limitrange
+  namespace: monitoring
+spec:
+  limits:
+    - type: Pod
+      max:
+        cpu: "4"
+        memory: "4Gi"
+      min:
+        cpu: "100m"
+        memory: "128Mi"
+      default:
+        cpu: "1"
+        memory: "1Gi"
+    - type: Container
+      max:
+        cpu: "4"
+        memory: "4Gi"
+      min:
+        cpu: "100m"
+        memory: "128Mi"
+      default:
+        cpu: "1"
+        memory: "1Gi"
+      defaultRequest:
+        cpu: "250m"
+        memory: "256Mi"
+
+---
+# Priority Class for critical services
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: critical-service
+value: 1000
+globalDefault: false
+description: "Priority class for critical services that should not be preempted"
+
+---
+# Priority Class for standard services
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: standard-service
+value: 100
+globalDefault: true
+description: "Default priority class for standard services"
+
+---
+# Priority Class for low-priority batch jobs
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: batch-low-priority
+value: 10
+globalDefault: false
+description: "Priority class for batch jobs that can be preempted"
