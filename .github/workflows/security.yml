@@ -1,0 +1,116 @@
+name: Security Checks
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  schedule:
+    # Run security checks daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  dependency-check:
+    name: Dependency Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install safety bandit
+
+      - name: Check for vulnerable dependencies
+        run: |
+          pip install flask requests opentelemetry-api opentelemetry-sdk
+          safety check || true
+
+      - name: Run Bandit security linter
+        run: bandit -r app/ -f json -o bandit-report.json || true
+
+      - name: Upload Bandit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: bandit-report
+          path: bandit-report.json
+
+  container-scan:
+    name: Container Image Scan
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [backend, frontend]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build container image for scanning
+        run: docker build -t ${{ matrix.service }}:${{ github.sha }} app/${{ matrix.service }}/
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ matrix.service }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-${{ matrix.service }}-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-${{ matrix.service }}-results.sarif'
+
+  kubernetes-security:
+    name: Kubernetes Manifest Security Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Kubesec
+        run: |
+          curl -L https://github.com/controlplaneio/kubesec/releases/download/v2.14.0/kubesec_linux_amd64.tar.gz | tar xz
+          chmod +x ./kubesec
+
+      - name: Scan Kubernetes manifests
+        run: |
+          for file in app/**/*.yaml observability/**/*.yaml gitops/**/*.yaml; do
+            echo "Scanning $file..."
+            ./kubesec scan "$file" || true
+          done
+
+  secret-scan:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run GitGuardian secret scanner
+        uses: gitguardian/ggshield-action@master
+        env:
+          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+        with:
+          args: --verbose
+
+      - name: Run Trufflehogg secret scan
+        run: |
+          pip install truffleHog
+          trufflehog filesystem . --json > trufflehogg-results.json || true
+
+      - name: Upload TruffleHog results
+        uses: actions/upload-artifact@v3
+        with:
+          name: trufflehogg-results
+          path: trufflehogg-results.json
