@@ -32,9 +32,31 @@ Production-ready monitoring solution demonstrating enterprise architecture:
 
 ## Quick Start
 
-Prerequisites: Kubernetes cluster, Docker, Terraform, kubectl, helm, git
+### One-Command Setup
 
-Terraform deployment (recommended - WSL2):
+```bash
+# Install prerequisites (first time only)
+make install
+
+# Start everything (Minikube + all services)
+make start
+```
+
+Script will:
+- Start Minikube
+- Build Docker images
+- Deploy all services with Terraform
+- Set up monitoring stack (Prometheus, Grafana, Jaeger, Loki)
+- Show all UIs
+
+### Alternative Methods
+
+Manual script execution:
+```bash
+./start-local.sh
+```
+
+Traditional Terraform deployment:
 ```bash
 minikube start --driver=docker --force
 eval $(minikube docker-env)
@@ -95,6 +117,33 @@ docs/                         Enterprise deployment and operations guides
 
 ## Essential Commands
 
+### Simplified Commands (using Makefile)
+
+```bash
+make start              # Start everything
+make status             # Check service status
+make logs               # View backend logs
+make test               # Run load tests
+make demo               # Open all UIs
+make stop               # Stop Minikube
+make clean              # Complete cleanup
+make help               # Show all available commands
+```
+
+### Port Forwarding to Localhost
+
+```bash
+make port-forward-all   # Forward all services to localhost
+
+# Or individually:
+make open-grafana       # http://localhost:3000 (admin/prom-operator)
+make open-prometheus    # http://localhost:9090
+make open-jaeger        # http://localhost:16686
+make open-frontend      # Frontend service
+```
+
+### Traditional Kubernetes Commands
+
 Local development:
 ```bash
 minikube start --driver=docker --force
@@ -104,16 +153,6 @@ cd app/frontend && docker build -t frontend-service:latest . && cd ../..
 kubectl apply -f app/backend/backend-deployment.yaml app/backend/backend-service.yaml
 kubectl apply -f app/frontend/frontend-deployment.yaml app/frontend/frontend-service.yaml
 kubectl get pods -n default
-```
-
-Monitoring access:
-```bash
-kubectl port-forward -n monitoring svc/grafana 3000:80 # http://localhost:3000 (admin/admin)
-kubectl port-forward -n monitoring svc/prometheus-operator-kube-p-prometheus 9090:9090  # http://localhost:9090
-kubectl port-forward -n monitoring svc/jaeger 16686:16686 # http://localhost:16686
-kubectl port-forward -n default svc/frontend-service 5000:5000 # http://localhost:5000
-# Generate load to see observability data
-node utils/load-test.js http://localhost:5000
 ```
 
 Kubernetes operations:

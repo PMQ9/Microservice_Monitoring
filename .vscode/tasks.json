@@ -1,0 +1,274 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Local Server",
+      "type": "shell",
+      "command": "make start",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true,
+        "clear": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "Start Minikube and deploy all services"
+    },
+    {
+      "label": "Stop Local Server",
+      "type": "shell",
+      "command": "make stop",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": false
+      },
+      "group": "build",
+      "detail": "Stop Minikube cluster"
+    },
+    {
+      "label": "Restart Local Server",
+      "type": "shell",
+      "command": "make restart",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "group": "build",
+      "detail": "Restart Minikube and all services"
+    },
+    {
+      "label": "Check Status",
+      "type": "shell",
+      "command": "make status",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "group": "build",
+      "detail": "Show status of all services"
+    },
+    {
+      "label": "Build Docker Images",
+      "type": "shell",
+      "command": "make build",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "group": "build",
+      "detail": "Build backend and frontend Docker images"
+    },
+    {
+      "label": "Deploy Services",
+      "type": "shell",
+      "command": "make deploy",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "group": "build",
+      "detail": "Deploy services (skip image build)"
+    },
+    {
+      "label": "View Backend Logs",
+      "type": "shell",
+      "command": "make logs",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "group": "test",
+      "detail": "Stream backend service logs",
+      "isBackground": true
+    },
+    {
+      "label": "View Frontend Logs",
+      "type": "shell",
+      "command": "make logs-frontend",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "group": "test",
+      "detail": "Stream frontend service logs",
+      "isBackground": true
+    },
+    {
+      "label": "Run Load Test",
+      "type": "shell",
+      "command": "make test",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "group": "test",
+      "detail": "Run load test against frontend"
+    },
+    {
+      "label": "Open Demo (All UIs)",
+      "type": "shell",
+      "command": "make demo",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": false
+      },
+      "group": "test",
+      "detail": "Open all monitoring UIs"
+    },
+    {
+      "label": "Open Frontend",
+      "type": "shell",
+      "command": "make open-frontend",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "group": "test",
+      "detail": "Open frontend service in browser"
+    },
+    {
+      "label": "Open Grafana",
+      "type": "shell",
+      "command": "make open-grafana",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false
+      },
+      "group": "test",
+      "detail": "Open Grafana dashboard (admin/prom-operator)",
+      "isBackground": true
+    },
+    {
+      "label": "Open Jaeger",
+      "type": "shell",
+      "command": "make open-jaeger",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false
+      },
+      "group": "test",
+      "detail": "Open Jaeger tracing UI",
+      "isBackground": true
+    },
+    {
+      "label": "Open Prometheus",
+      "type": "shell",
+      "command": "make open-prometheus",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false
+      },
+      "group": "test",
+      "detail": "Open Prometheus UI",
+      "isBackground": true
+    },
+    {
+      "label": "Port Forward All Services",
+      "type": "shell",
+      "command": "make port-forward-all",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false
+      },
+      "group": "test",
+      "detail": "Forward all services to localhost",
+      "isBackground": true
+    },
+    {
+      "label": "Clean Up Everything",
+      "type": "shell",
+      "command": "make clean",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "group": "build",
+      "detail": "Delete all resources and Minikube cluster"
+    },
+    {
+      "label": "Shell into Backend",
+      "type": "shell",
+      "command": "make shell-backend",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "group": "test",
+      "detail": "Open shell in backend pod"
+    },
+    {
+      "label": "Shell into Frontend",
+      "type": "shell",
+      "command": "make shell-frontend",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "group": "test",
+      "detail": "Open shell in frontend pod"
+    },
+    {
+      "label": "Check Prerequisites",
+      "type": "shell",
+      "command": "make check",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "group": "build",
+      "detail": "Verify all required tools are installed"
+    },
+    {
+      "label": "Install Prerequisites",
+      "type": "shell",
+      "command": "make install",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "group": "build",
+      "detail": "Install kubectl, helm, minikube, docker"
+    }
+  ]
+}

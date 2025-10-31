@@ -1,0 +1,74 @@
+{
+  // Editor settings
+  "editor.formatOnSave": true,
+  "editor.rulers": [80, 120],
+  "editor.tabSize": 2,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  // Python settings
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.formatting.provider": "black",
+  "python.testing.pytestEnabled": true,
+
+  // Kubernetes settings
+  "vs-kubernetes": {
+    "vs-kubernetes.helm-path": "helm",
+    "vs-kubernetes.kubectl-path": "kubectl",
+    "vs-kubernetes.minikube-path": "minikube"
+  },
+
+  // Terminal settings
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.cwd": "${workspaceFolder}",
+
+  // File associations
+  "files.associations": {
+    "*.yaml": "yaml",
+    "*.yml": "yaml",
+    "Dockerfile*": "dockerfile",
+    ".env*": "properties",
+    "Makefile": "makefile"
+  },
+
+  // Exclude from file explorer
+  "files.exclude": {
+    "**/.git": true,
+    "**/.terraform": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/.pytest_cache": true
+  },
+
+  // Task settings
+  "task.autoDetect": "on",
+  "task.problemMatchers.neverPrompt": false,
+
+  // Git settings
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+
+  // YAML settings
+  "[yaml]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced"
+  },
+
+  // Python settings
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+
+  // Makefile settings
+  "[makefile]": {
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false
+  },
+
+  // Custom task buttons in status bar
+  "statusBar.visible": true
+}

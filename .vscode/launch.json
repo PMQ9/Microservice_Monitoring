@@ -1,0 +1,78 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Start & Debug Backend",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/app/backend/app.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "FLASK_APP": "app.py",
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "1"
+      },
+      "preLaunchTask": "Build Docker Images"
+    },
+    {
+      "name": "Start & Debug Frontend",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/app/frontend/app.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "FLASK_APP": "app.py",
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "1",
+        "BACKEND_URL": "http://localhost:5000"
+      },
+      "preLaunchTask": "Build Docker Images"
+    },
+    {
+      "name": "Attach to Backend Pod",
+      "type": "python",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/app/backend",
+          "remoteRoot": "/app"
+        }
+      ]
+    },
+    {
+      "name": "Attach to Frontend Pod",
+      "type": "python",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5679
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/app/frontend",
+          "remoteRoot": "/app"
+        }
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Both Services",
+      "configurations": [
+        "Start & Debug Backend",
+        "Start & Debug Frontend"
+      ],
+      "presentation": {
+        "hidden": false,
+        "group": "debug",
+        "order": 1
+      }
+    }
+  ]
+}

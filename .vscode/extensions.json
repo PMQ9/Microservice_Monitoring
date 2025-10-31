@@ -1,0 +1,46 @@
+{
+  "recommendations": [
+    // Kubernetes Development
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "mindaro.mindaro",
+
+    // Python Development
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.black-formatter",
+
+    // Docker & Containers
+    "ms-azuretools.vscode-docker",
+
+    // YAML & Config Files
+    "redhat.vscode-yaml",
+    "editorconfig.editorconfig",
+
+    // Git & Version Control
+    "eamodio.gitlens",
+
+    // Terraform
+    "hashicorp.terraform",
+
+    // REST Client (for testing APIs)
+    "humao.rest-client",
+
+    // Prometheus & Grafana
+    "rubymaniac.vscode-prometheus",
+
+    // Markdown
+    "yzhang.markdown-all-in-one",
+
+    // Shell Scripts
+    "timonwong.shellcheck",
+
+    // TOML (for Python configs)
+    "tamasfe.even-better-toml",
+
+    // Better comments
+    "aaron-bond.better-comments",
+
+    // Error Lens (inline errors)
+    "usernamehw.errorlens"
+  ]
+}
