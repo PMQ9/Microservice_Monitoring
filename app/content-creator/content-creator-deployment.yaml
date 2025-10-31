@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: content-creator
+  namespace: default
+  labels:
+    app: content-creator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: content-creator
+  template:
+    metadata:
+      labels:
+        app: content-creator
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: content-creator
+        image: content-creator-service:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5001
+          name: http
+        - containerPort: 8000
+          name: metrics
+        env:
+        - name: FLASK_ENV
+          value: "production"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5001
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5001
+          initialDelaySeconds: 5
+          periodSeconds: 5
