@@ -2,6 +2,41 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Make Start",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "make start",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Make Port Forward All",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "make port-forward-all",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Make Test",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "make test",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Make Stop",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "make stop",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Make Status",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "make status",
+      "cwd": "${workspaceFolder}"
+    },
+    {
       "name": "Start & Debug Backend",
       "type": "python",
       "request": "launch",
