@@ -1,0 +1,175 @@
+{
+  "dashboard": {
+    "title": "Content Creators Dashboard",
+    "tags": ["social-media", "creators"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Total Content Creators",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "creators_active_total",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "orientation": "auto",
+          "textMode": "auto"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 50},
+                {"color": "red", "value": 100}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Total Content Created",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0},
+        "targets": [
+          {
+            "expr": "sum(content_created_total)",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "orientation": "auto",
+          "textMode": "auto"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 100},
+                {"color": "red", "value": 500}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Content Creation Rate (per minute)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "rate(content_created_total[1m]) * 60",
+            "refId": "A",
+            "legendFormat": "{{content_type}}"
+          }
+        ],
+        "yaxes": [
+          {"format": "short", "label": "Content/min"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Content by Type",
+        "type": "piechart",
+        "gridPos": {"h": 10, "w": 8, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "sum by (content_type) (content_created_total)",
+            "refId": "A",
+            "legendFormat": "{{content_type}}"
+          }
+        ],
+        "options": {
+          "legend": {"displayMode": "table", "placement": "right"},
+          "pieType": "pie"
+        }
+      },
+      {
+        "id": 5,
+        "title": "Content Creation Duration (p95)",
+        "type": "graph",
+        "gridPos": {"h": 10, "w": 8, "x": 8, "y": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(content_creation_duration_bucket[5m]))",
+            "refId": "A",
+            "legendFormat": "{{content_type}}"
+          }
+        ],
+        "yaxes": [
+          {"format": "s", "label": "Duration"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Creator Service Request Rate",
+        "type": "graph",
+        "gridPos": {"h": 10, "w": 8, "x": 16, "y": 8},
+        "targets": [
+          {
+            "expr": "rate(creator_requests_total[1m]) * 60",
+            "refId": "A",
+            "legendFormat": "{{endpoint}}"
+          }
+        ],
+        "yaxes": [
+          {"format": "short", "label": "Requests/min"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Top Content Creators by Content Count",
+        "type": "table",
+        "gridPos": {"h": 10, "w": 12, "x": 0, "y": 18},
+        "targets": [
+          {
+            "expr": "topk(10, sum by (creator_id) (content_created_total))",
+            "refId": "A",
+            "format": "table"
+          }
+        ],
+        "options": {
+          "showHeader": true
+        }
+      },
+      {
+        "id": 8,
+        "title": "Content Creation Timeline",
+        "type": "graph",
+        "gridPos": {"h": 10, "w": 12, "x": 12, "y": 18},
+        "targets": [
+          {
+            "expr": "sum(content_created_total)",
+            "refId": "A",
+            "legendFormat": "Total Content"
+          }
+        ],
+        "yaxes": [
+          {"format": "short", "label": "Total Content"},
+          {"format": "short"}
+        ]
+      }
+    ],
+    "schemaVersion": 27,
+    "version": 1,
+    "refresh": "5s"
+  }
+}
