@@ -5,7 +5,7 @@ terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
 terraform/crash.log
 
-# Terraform - Local provider cache 
+# Terraform - Local provider cache
 terraform/.terraform/
 .terraform/
 
@@ -26,3 +26,4 @@ START_HERE.md
 
 # Template files
 k8s-security/secrets-management-TEMPLATE.yaml
+CLAUDE.md
